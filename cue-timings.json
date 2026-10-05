@@ -1,0 +1,13 @@
+{
+  "duration_seconds": 180,
+  "setup_whistle_file": "whistle.m4a",
+  "setup_duration_seconds": 60,
+  "cues": [
+    { "file": "buzzer.m4a", "play_at_elapsed_seconds": -3.2 },
+    { "file": "first_charge.m4a", "play_at_elapsed_seconds": 27.0 },
+    { "file": "first_charge.m4a", "play_at_elapsed_seconds": 57.0 },
+    { "file": "super_charge.m4a", "play_at_elapsed_seconds": 117.0 },
+    { "file": "bucket_collectable.m4a", "play_at_elapsed_seconds": 147.0 },
+    { "file": "buzzer.m4a", "play_at_elapsed_seconds": 176.8 }
+  ]
+}
