@@ -122,7 +122,7 @@
       source.loop = true;
       const bass = ac.createBiquadFilter();
       bass.type = 'lowshelf';
-      bass.frequency.value = 160;
+      bass.frequency.value = 140;
       bass.gain.value = bassBoostEnabled ? 20 * Math.log10(bassBoostPercent / 100) : 0;
       const bgmVolume = ac.createGain();
       bgmVolume.gain.value = timerIsActive() ? 0 : 1;

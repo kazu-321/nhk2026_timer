@@ -7,7 +7,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   --bar-height: clamp(72px, 10svh, 108px);
-  --settings-width: calc(var(--bar-height) * 2.5);
+  --settings-width: min(calc(var(--bar-height) * 2.5), 14vw);
 }
 
 * { box-sizing: border-box; }
@@ -144,7 +144,7 @@ button, input { font: inherit; }
 @media (max-width: 520px) {
   :root {
     --bar-height: clamp(74px, 10svh, 92px);
-    --settings-width: calc(var(--bar-height) * 2);
+    --settings-width: clamp(60px, 18vw, var(--bar-height));
   }
   .controls { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) minmax(0, 1.1fr) var(--settings-width); }
   .control { font-size: clamp(11px, 3.1vw, 16px); letter-spacing: 0; }
