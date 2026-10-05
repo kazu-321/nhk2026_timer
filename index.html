@@ -28,6 +28,11 @@
         <h2 id="settings-title">設定</h2>
         <button class="close-settings" id="close-settings" type="button" aria-label="閉じる">×</button>
       </header>
+      <div class="match-start-setting">
+        <label for="match-start-time">試合開始時間調整</label>
+        <input id="match-start-time" type="number" inputmode="numeric" min="-60" max="180" step="1" value="0">
+        <span>秒</span>
+      </div>
       <label class="volume-label" for="volume-control"><span>音量</span><output id="volume-value" for="volume-control">100%</output></label>
       <input id="volume-control" class="volume-control" type="range" min="0" max="500" step="1" value="100">
       <label class="bgm-setting" for="bgm-toggle">

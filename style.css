@@ -126,6 +126,8 @@ button, input { font: inherit; }
 .settings-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
 .settings-header h2 { margin: 0; font-size: 20px; font-weight: 650; }
 .close-settings { width: 34px; height: 34px; border: 0; color: #ddd; background: transparent; font-size: 28px; cursor: pointer; }
+.match-start-setting { display: grid; grid-template-columns: minmax(0, 1fr) 88px auto; gap: 8px; align-items: center; margin-bottom: 22px; font-size: 15px; }
+.match-start-setting input { width: 100%; min-width: 0; padding: 8px; border: 1px solid #555; border-radius: 6px; color: #fff; background: #080808; font-size: 16px; font-variant-numeric: tabular-nums; }
 .volume-label { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 16px; }
 .volume-label output, .bgm-setting output { color: #bdbdbd; font-variant-numeric: tabular-nums; }
 .volume-control { width: 100%; height: 28px; margin: 0 0 22px; accent-color: #fff; cursor: pointer; }
@@ -151,6 +153,7 @@ button, input { font: inherit; }
   .match-control { font-size: clamp(16px, 4.2vw, 21px); }
   .settings-control { font-size: 13px; }
   .settings-panel { padding: 16px; }
+  .match-start-setting { grid-template-columns: minmax(0, 1fr) 76px auto; }
 }
 
 @media (max-height: 380px) {

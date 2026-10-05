@@ -15,6 +15,7 @@
   const bassAmountSetting = document.querySelector('#bass-amount-setting');
   const bassAmountControl = document.querySelector('#bass-amount-control');
   const bassAmountValue = document.querySelector('#bass-amount-value');
+  const matchStartTimeControl = document.querySelector('#match-start-time');
 
   let context;
   let masterGain;
@@ -24,6 +25,7 @@
   let bgmGain = null;
   let bassBoostEnabled = false;
   let bassBoostPercent = 250;
+  let matchStartSeconds = 0;
   let audioReady = Promise.resolve();
   let mode = 'ready';
   let config = { duration_seconds: 180, setup_whistle_file: 'whistle.m4a', setup_duration_seconds: 60, cues: [] };
@@ -32,6 +34,7 @@
   let frame = 0;
   let baseTime = 0;
   let matchAnchor = 0;
+  let matchClockAnchor = 0;
   const audioFileCache = new Map();
 
   const audioContext = () => {
@@ -44,8 +47,9 @@
     return context;
   };
   const fmt = (seconds) => {
-    const value = Math.max(0, Math.floor(seconds));
-    return `${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`;
+    const value = Math.floor(Math.abs(seconds));
+    const sign = seconds < 0 ? '-' : '';
+    return `${sign}${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`;
   };
   const scheduleBuffer = (buffer, when, track = true) => {
     if (!buffer || !context) return false;
@@ -174,7 +178,7 @@
     } else {
       mode = 'match';
       matchButton.textContent = '試合終了';
-      const shown = Math.min(config.duration_seconds, Math.floor(now - matchAnchor));
+      const shown = Math.min(config.duration_seconds, Math.floor(now - matchClockAnchor + matchStartSeconds));
       setReadout(fmt(shown));
       if (shown >= config.duration_seconds) {
         mode = 'done';
@@ -186,11 +190,24 @@
     if (mode === 'match-countdown') frame = requestAnimationFrame(displayMatchCountdown);
     else if (mode === 'match') frame = requestAnimationFrame(displayMatchCountdown);
   }
-  function scheduleMatchCues(anchor) {
+  function scheduleMatchCues(startCueAnchor, clockAnchor, startSeconds) {
     for (const cue of config.cues) {
-      const when = anchor + Number(cue.play_at_elapsed_seconds);
+      const cueTime = Number(cue.play_at_elapsed_seconds);
+      const when = cueTime < 0
+        ? startCueAnchor + cueTime
+        : clockAnchor + cueTime - startSeconds;
       if (when >= audioContext().currentTime) scheduleBuffer(decoded.get(cue.file), when);
     }
+  }
+  function readMatchStartSeconds() {
+    const raw = matchStartTimeControl.value.trim();
+    const parsed = raw === '' ? 0 : Number(raw);
+    const maximum = Number(config.duration_seconds || 180);
+    matchStartSeconds = Number.isFinite(parsed)
+      ? Math.max(-60, Math.min(maximum, Math.round(parsed)))
+      : 0;
+    matchStartTimeControl.value = String(matchStartSeconds);
+    return matchStartSeconds;
   }
   async function startMatch() {
     if (mode === 'match' || mode === 'match-countdown') {
@@ -205,13 +222,15 @@
     const ac = audioContext();
     try { await ac.resume(); } catch (_) { /* audio remains unavailable */ }
     await audioReady;
+    const startSeconds = readMatchStartSeconds();
     baseTime = ac.currentTime + 0.12;
-    // 試合時刻0秒は「START」の表示開始。start.m4aはそこから3秒前に鳴らす。
+    // START表示が始まった時刻を試合経過時間の起点にする。
     matchAnchor = baseTime + 6;
+    matchClockAnchor = matchAnchor;
     mode = 'match-countdown';
     setBgmAudible(false);
     matchButton.textContent = '中止';
-    scheduleMatchCues(matchAnchor);
+    scheduleMatchCues(matchAnchor, matchClockAnchor, startSeconds);
     frame = requestAnimationFrame(displayMatchCountdown);
   }
   function displaySetup() {
